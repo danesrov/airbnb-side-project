@@ -1,99 +1,155 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🧩 Proyecto Base – Backend con NestJS + MySQL
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este repositorio es un **boilerplate backend en NestJS** con conexión a **MySQL** mediante SQL crudo.  
+Incluye un módulo de ejemplo (`users`) que muestra cómo estructurar servicios, queries, transacciones y manejo de errores.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## ⚙️ Configuración inicial
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. **Instalar dependencias**
+   ```bash
+   npm install
+   ```
 
-## Project setup
+2. **Variables de entorno (`.env`)**
+   ```bash
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASS=tu_password
+   DB_NAME=plataforma_alquiler
+   ```
 
-```bash
-$ npm install
+3. **Levantar el proyecto**
+   ```bash
+   npm run start:dev
+   ```
+
+   El servidor quedará disponible en  
+   👉 `http://localhost:3000/api`
+
+---
+
+## 📦 Estructura del proyecto
+
+```
+src/
+ ├── core/                # Configuración global de DB y helpers
+ │   ├── core.module.ts
+ │   └── database.service.ts
+ │
+ ├── users/               # Módulo de ejemplo
+ │   ├── users.controller.ts
+ │   ├── users.service.ts
+ │   ├── queries/         # 💡 Aquí están las consultas SQL del módulo
+ │   │   └── user.queries.ts
+ │   └── user.entity.ts
+ │
+ ├── migrations/          # Scripts SQL de migraciones
+ │   ├── sql/
+ │   └── runner-raw.ts
+ │
+ └── main.ts              # Entry point
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## 🧱 Estructura de módulos
 
-# watch mode
-$ npm run start:dev
+Cada módulo (por ejemplo, `users`, `anuncios`, `reservas`, etc.) debe tener:
 
-# production mode
-$ npm run start:prod
+- Su propia carpeta `queries/`
+- Un archivo que **exporte todas las queries SQL** (por orden lógico)
+- Sus servicios (`.service.ts`) usando el `DatabaseService` para ejecutar esas queries
+
+Ejemplo:  
+`src/users/queries/user.queries.ts`
+
+```ts
+export const USER_QUERIES = {
+  QUERIES: {
+    FIND_ALL: 'SELECT id, nombre, apellido, correo, telefono FROM users',
+    FIND_BY_ID: 'SELECT id, nombre, apellido, correo, telefono FROM users WHERE id = ?',
+    EXISTS_BY_ID: 'SELECT 1 AS ok FROM users WHERE id = ? LIMIT 1',
+  },
+  MUTATIONS: {
+    CREATE_USER: `
+      INSERT INTO users (nombre, apellido, correo, telefono, created_at)
+      VALUES (?, ?, ?, ?, NOW());
+    `,
+  },
+};
 ```
 
-## Run tests
+Luego en tu servicio:
 
-```bash
-# unit tests
-$ npm run test
+```ts
+import { USER_QUERIES } from './queries/user.queries';
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+async findAll() {
+  return this.db.query<User>(USER_QUERIES.QUERIES.FIND_ALL);
+}
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 💾 DatabaseService
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+El `DatabaseService` es un wrapper central que simplifica las operaciones SQL:
 
-```bash
-$ npm install -g mau
-$ mau deploy
+```ts
+// Consultas básicas
+await db.query<User>('SELECT * FROM users');
+
+// Una sola fila
+await db.queryOne<User>('SELECT * FROM users WHERE id = ?', [id]);
+
+// Verificar existencia
+await db.exists('SELECT 1 FROM users WHERE correo = ?', [email]);
+
+// Transacciones
+await db.tx(async (qr) => {
+  await qr.query('UPDATE ...');
+  await qr.query('INSERT ...');
+});
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🧰 Buenas prácticas
 
-Check out a few resources that may come in handy when working with NestJS:
+- ✅ **Cada módulo** debe tener su carpeta `queries/`  
+  para mantener el código limpio y separado de la lógica del servicio.
+- ✅ Siempre usa **placeholders (`?`)** para evitar inyecciones SQL.
+- ✅ Centraliza errores y logs con el **filtro global de excepciones**.
+- ✅ Usa transacciones (`db.tx`) cuando varias operaciones dependan entre sí.
+- ✅ Revisa el módulo **`users`** — sirve como **referencia completa** de estructura y estilo.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## 🚀 Migraciones
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Para crear o actualizar tablas usa el sistema de migraciones incluido.
 
-## Stay in touch
+Ejemplo:
+```bash
+npm run migrate
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Coloca tus scripts SQL en `src/migrations/sql/`  
+con nombres ordenados (p. ej. `20251102_001_create_users.sql`).
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## 💬 Notas finales
+
+- Este proyecto busca un estilo limpio y modular: **cada módulo maneja sus propias queries**.
+- El módulo `users` es tu guía — sigue ese patrón para los demás.
+- Si agregas un nuevo módulo, **usa tu propia carpeta `queries/` y exporta las consultas** desde allí.
+
+---
+
+> ✨ **Objetivo:** mantener un backend legible, modular y fácil de mantener.
+> 
+> Cada módulo tiene independencia, sus queries bien organizadas y un flujo limpio gracias al `DatabaseService`.
