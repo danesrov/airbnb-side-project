@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DB_TYPE } from './abstracts/db.types';
 
 @Global()
 @Module({
@@ -8,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => ({
-        type: 'postgres',
+        type: DB_TYPE.MYSQL,
         host: cfg.get<string>('DB_HOST'),
         port: cfg.get<number>('DB_PORT'),
         username: cfg.get<string>('DB_USER'),
