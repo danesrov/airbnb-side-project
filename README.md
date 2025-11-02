@@ -126,22 +126,6 @@ await db.tx(async (qr) => {
 - ✅ Usa transacciones (`db.tx`) cuando varias operaciones dependan entre sí.
 - ✅ Revisa el módulo **`users`** — sirve como **referencia completa** de estructura y estilo.
 
----
-
-## 🚀 Migraciones
-
-Para crear o actualizar tablas usa el sistema de migraciones incluido.
-
-Ejemplo:
-```bash
-npm run migrate
-```
-
-Coloca tus scripts SQL en `src/migrations/sql/`  
-con nombres ordenados (p. ej. `20251102_001_create_users.sql`).
-
----
-
 ## 💬 Notas finales
 
 - Este proyecto busca un estilo limpio y modular: **cada módulo maneja sus propias queries**.
