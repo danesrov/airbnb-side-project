@@ -6,7 +6,7 @@ import { DataSource, QueryRunner } from 'typeorm';
 export class DatabaseService implements IDatabaseService {
   constructor(private readonly dataSource: DataSource) {}
 
-  async query<T = any>(sql: string, params: any[]): Promise<T[]> {
+  async query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
     return this.dataSource.query(sql, params);
   }
 
