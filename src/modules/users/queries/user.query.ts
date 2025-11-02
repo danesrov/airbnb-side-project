@@ -1,0 +1,6 @@
+export const USER_QUERY = {
+  FIND_ALL: 'SELECT * FROM USUARIO;',
+  GET_BY_ID: 'SELECT * FROM USUARIO US WHERE US.id_usuario = $1 LIMIT 1;',
+  EXISTS_BY_ID:
+    'SELECT EXISTS(SELECT 1 FROM USUARIO WHERE id_usuario = $1) AS exists_;',
+};
