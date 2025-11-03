@@ -22,8 +22,8 @@ export class ZoneController {
   }
 
   @Post()
-  async createZone(@Body() zone: Zone) {
-    return this.zoneService.createZone(zone);
+  async saveZone(@Body() zone: Zone) {
+    return this.zoneService.saveZone(zone);
   }
 
   @Put(':id')

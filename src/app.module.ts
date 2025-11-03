@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseCoreModule } from './core/db/db-core.module';
 import { UsersModule } from './modules/users/users.module';
 import { SeasonModule } from './modules/seasons/seasons.module';
+import { ZoneModule } from './modules/zones/zones.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 
 @Module({
@@ -16,6 +17,7 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
     UsersModule,
     SeasonModule,
     ReservationsModule,
+    ZoneModule,
   ],
   controllers: [AppController],
   providers: [AppService],

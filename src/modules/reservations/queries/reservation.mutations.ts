@@ -1,7 +1,7 @@
 export const RESERVATION_MUTATION = {
   CREATE_RESERVATION: `
-    INSERT INTO RESERVA (id_huesped, id_anuncio, estado, fecha_entrada, fecha_salida, noches, total, zona_horaria_reserva)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO RESERVA (id_reserva, id_huesped, id_anuncio, estado, fecha_entrada, fecha_salida, noches, total, zona_horaria_reserva)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?);
   `,
 
   UPDATE_RESERVATION: `

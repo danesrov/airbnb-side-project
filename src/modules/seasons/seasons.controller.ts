@@ -17,7 +17,7 @@ export class SeasonController {
   }
 
   @Post()
-  async create(@Body() season: Season) {
+  async save(@Body() season: Season) {
     return await this.seasonService.saveSeason(season);
   }
 

@@ -1,7 +1,7 @@
 export const ZONE_MUTATION = {
   CREATE_ZONE: `
-    INSERT INTO ZONA (id_ciudad, nombre)
-    VALUES (?, ?);
+    INSERT INTO ZONA (id_zona ,id_ciudad ,nombre)
+    VALUES (?, ?, ?);
   `,
   UPDATE_ZONE: `
     UPDATE ZONA

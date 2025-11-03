@@ -22,7 +22,7 @@ export class ZoneService {
     return this.zoneRepository.getById(id);
   }
 
-  async createZone(zone: Zone): Promise<Zone | null> {
+  async saveZone(zone: Zone): Promise<Zone | null> {
     return this.zoneRepository.save(zone);
   }
 

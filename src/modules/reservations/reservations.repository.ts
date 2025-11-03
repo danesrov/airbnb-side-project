@@ -51,6 +51,7 @@ export class ReservationRepository implements IReservationRepository {
     try {
       await this.db.transac(async (qr) => {
         await qr.query(RESERVATION_QUERIES.MUTATIONS.CREATE_RESERVATION, [
+          entity.id_reserva,
           entity.id_huesped,
           entity.id_anuncio,
           entity.estado,

@@ -6,12 +6,12 @@ export const SEASON_QUERY = {
   GET_BY_ID: `
     SELECT id_temporada, nombre, fecha_inicio, fecha_fin
     FROM TEMPORADA
-    WHERE id_temporada = $1
+    WHERE id_temporada = ?
     LIMIT 1;
   `,
   EXISTS_BY_ID: `
     SELECT EXISTS(
-      SELECT 1 FROM TEMPORADA WHERE id_temporada = $1
+      SELECT 1 FROM TEMPORADA WHERE id_temporada = ?
     ) AS exists_;
   `,
   FIND_BY_DATE_RANGE: `

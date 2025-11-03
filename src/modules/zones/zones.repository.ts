@@ -38,6 +38,7 @@ export class ZoneRepository implements IZoneRepository {
     try {
       await this.db.transac(async (qr) => {
         await qr.query(ZONE_QUERIES.MUTATIONS.CREATE_ZONE, [
+          entity.id_zona,
           entity.id_ciudad,
           entity.nombre,
         ]);

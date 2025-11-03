@@ -34,6 +34,7 @@ export class SeasonRepository implements ISeasonRepository {
     try {
       await this.db.transac(async (qr) => {
         await qr.query(SEASON_QUERIES.MUTATIONS.CREATE_SEASON, [
+          entity.id_temporada,
           entity.nombre,
           entity.fecha_inicio,
           entity.fecha_fin,
