@@ -5,15 +5,14 @@ import { SeasonRepository } from './seasons.repository';
 import { TOKENS } from 'src/core/tokens';
 
 @Module({
-  controllers: [SeasonController],
   providers: [
-    SeasonService,
     {
       provide: TOKENS.SEASON.REPOSITORY,
       useClass: SeasonRepository,
     },
     SeasonService,
   ],
+  controllers: [SeasonController],
   exports: [SeasonService],
 })
 export class SeasonModule {}
