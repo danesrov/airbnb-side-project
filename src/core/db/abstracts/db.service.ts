@@ -7,4 +7,5 @@ export interface IDatabaseService {
   queryOne<T = any>(sql: string, params?: any[]): Promise<T | null>;
   /** Execute a transaction */
   transac<T>(run: (qr: QueryRunner) => Promise<T>): Promise<T>;
+  
 }
