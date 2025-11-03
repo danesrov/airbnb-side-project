@@ -6,6 +6,10 @@ import { DatabaseCoreModule } from './core/db/db-core.module';
 import { UsersModule } from './modules/users/users.module';
 import { ListingsModule } from './modules/listings/listings.module';
 import { AmenitiesModule } from './modules/amenity/amenities.module';
+import { HostsModule } from './modules/hosts/hosts.module';
+import { SeasonModule } from './modules/seasons/seasons.module';
+import { ZoneModule } from './modules/zones/zones.module';
+import { ReservationsModule } from './modules/reservations/reservations.module';
 
 @Module({
   imports: [
@@ -16,6 +20,10 @@ import { AmenitiesModule } from './modules/amenity/amenities.module';
     UsersModule,
     AmenitiesModule,
     ListingsModule,
+    HostsModule,
+    SeasonModule,
+    ReservationsModule,
+    ZoneModule,
   ],
   controllers: [AppController],
   providers: [AppService],
