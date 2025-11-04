@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Put, Delete, Param, Query, Body, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Query,
+  Body,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ListingsService } from './listings.service';
 import { CreateListingDto } from './dto/create-listing.dto';
 import { UpdateListingDto } from './dto/update-listing.dto';
 
-@Controller('listings') 
+@Controller('listings')
 export class ListingsController {
   constructor(private readonly service: ListingsService) {}
 
@@ -15,7 +25,8 @@ export class ListingsController {
     @Query('id_ciudad') id_ciudad?: string,
     @Query('capacidadMin') capacidadMin?: string,
   ) {
-    const p = Number(page), ps = Number(pageSize);
+    const p = Number(page),
+      ps = Number(pageSize);
     if (id_ciudad && capacidadMin) {
       return this.service.list(p, ps, Number(id_ciudad), Number(capacidadMin));
     }
@@ -40,5 +51,10 @@ export class ListingsController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.service.remove(id);
+  }
+
+  @Get('/more/reserved')
+  moreReserved() {
+    return this.service.getMoreReserved();
   }
 }

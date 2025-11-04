@@ -6,4 +6,5 @@ export interface IReservationRepository
   findByStatus(status: number): Promise<Reservation[]>;
   findByGuest(guestId: number): Promise<Reservation[]>;
   update(id: number, entity: Reservation): Promise<boolean>;
+  getLastId(): Promise<number>;
 }

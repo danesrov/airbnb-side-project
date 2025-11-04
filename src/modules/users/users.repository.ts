@@ -19,7 +19,10 @@ export class UserRepository implements IUserRepository {
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    return this.db.queryOne<User>(USER_QUERIES.QUERIES.GET_BY_ID, [email]);
+    return this.db.queryOne<User>(
+      USER_QUERIES.QUERIES.FIND_WITH_HASH_BY_EMAIL,
+      [email],
+    );
   }
 
   async getById(id: number): Promise<User | null> {
@@ -39,10 +42,12 @@ export class UserRepository implements IUserRepository {
     try {
       await this.db.transac<any>(async (qr) => {
         await qr.query(USER_QUERIES.MUTATIONS.CREATE_USER, [
+          entity.id_usuario,
           entity.nombre,
           entity.apellido,
           entity.correo,
           entity.telefono,
+          entity.password,
         ]);
       });
 
@@ -50,5 +55,19 @@ export class UserRepository implements IUserRepository {
     } catch {
       return null;
     }
+  }
+
+  async existsByEmail(email: string): Promise<boolean> {
+    const row = await this.db.queryOne<{
+      exists_: 0 | 1 | '0' | '1' | boolean;
+    }>(USER_QUERIES.QUERIES.EXISTS_WITH_HASH_BY_EMAIL, [email]);
+    return Boolean(Number(row?.exists_ ?? 0));
+  }
+
+  async getLastId(): Promise<number> {
+    const lastId = await this.db.queryOne<{ id_usuario: number }>(
+      USER_QUERIES.QUERIES.FIND_LAST_ID,
+    );
+    return lastId?.id_usuario || 0;
   }
 }

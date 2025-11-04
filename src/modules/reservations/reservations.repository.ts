@@ -90,4 +90,12 @@ export class ReservationRepository implements IReservationRepository {
       return false;
     }
   }
+
+  async getLastId(): Promise<number> {
+    const last = await this.db.queryOne<{ id_reserva: number }>(
+      RESERVATION_QUERIES.QUERIES.LAST_ID,
+    );
+
+    return last?.id_reserva || 0;
+  }
 }

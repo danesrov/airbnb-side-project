@@ -3,9 +3,9 @@ export class Reservation {
   id_huesped: number;
   id_anuncio: number;
   estado: number;
-  fecha_reserva: Date;
-  fecha_entrada: Date;
-  fecha_salida: Date;
+  fecha_reserva: string;
+  fecha_entrada: string;
+  fecha_salida: string;
   noches: number;
   total: number;
   zona_horaria_reserva?: string;

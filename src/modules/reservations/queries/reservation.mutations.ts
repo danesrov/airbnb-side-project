@@ -1,12 +1,12 @@
 export const RESERVATION_MUTATION = {
   CREATE_RESERVATION: `
-    INSERT INTO RESERVA (id_reserva, id_huesped, id_anuncio, estado, fecha_entrada, fecha_salida, noches, total, zona_horaria_reserva)
+    INSERT INTO reserva (id_reserva, id_huesped, id_anuncio, estado, fecha_checkin, fecha_checkout, noches, total, timezone_reserva)
     VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?);
   `,
 
   UPDATE_RESERVATION: `
-    UPDATE RESERVA
-    SET id_huesped = ?, id_anuncio = ?, estado = ?, fecha_entrada = ?, fecha_salida = ?, noches = ?, total = ?, zona_horaria_reserva = ?
+    UPDATE reserva
+    SET id_huesped = ?, id_anuncio = ?, estado = ?, fecha_checkin = ?, fecha_checkout = ?, noches = ?, total = ?, ztimezone_reserva = ?
     WHERE id_reserva = ?;
   `,
 };

@@ -1,9 +1,15 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min, IsNumber } from 'class-validator';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+  IsNumber,
+} from 'class-validator';
 
 export class CreateListingDto {
-  @IsInt()
-  id_anuncio!: number; 
-
   @IsInt()
   id_anfitrion!: number;
 

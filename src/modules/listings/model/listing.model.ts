@@ -11,9 +11,9 @@ export interface Listing {
   precio_noche_base: number;
   min_noches: number;
   max_noches: number;
-  hora_checkin: string | null;   // 'HH:MM:SS'
-  hora_checkout: string | null;  // 'HH:MM:SS'
-  moneda: string;                // 'COP' | 'USD' ...
+  hora_checkin: string | null; // 'HH:MM:SS'
+  hora_checkout: string | null; // 'HH:MM:SS'
+  moneda: string; // 'COP' | 'USD' ...
   fecha_creacion: Date;
   fecha_actualizacion: Date;
 }

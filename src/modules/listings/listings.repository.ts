@@ -1,6 +1,6 @@
-import { Inject, Injectable, BadRequestException } from '@nestjs/common';
-import { TOKENS } from 'src/core/tokens';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { IDatabaseService } from 'src/core/db/abstracts/db.service';
+import { TOKENS } from 'src/core/tokens';
 import { IListingsRepository } from './interfaces/listings.repository';
 import { Listing } from './model/listing.model';
 import { LISTING_QUERIES } from './queries/listing.queries';
@@ -21,17 +21,32 @@ export class ListingsRepository implements IListingsRepository {
   }
 
   getById(id: number): Promise<Listing | null> {
-    return this.db.queryOne<Listing>(`
+    return this.db.queryOne<Listing>(
+      `
       SELECT * FROM \`anuncio\` WHERE id_anuncio = ? LIMIT 1
-    `, [id]);
+    `,
+      [id],
+    );
   }
 
   async save(entity: Listing): Promise<Listing> {
     // Inserta con id manual (entity.id_anuncio debe venir del service)
     await this.db.query(LISTING_QUERIES.MUTATIONS.CREATE, [
-      entity.id_anuncio, entity.id_anfitrion, entity.id_ciudad, entity.id_zona ?? null, entity.id_politica_cancelacion,
-      entity.titulo, entity.descripcion ?? null, entity.direccion ?? null, entity.capacidad, entity.precio_noche_base,
-      entity.min_noches, entity.max_noches, entity.hora_checkin ?? null, entity.hora_checkout ?? null, entity.moneda,
+      entity.id_anuncio,
+      entity.id_anfitrion,
+      entity.id_ciudad,
+      entity.id_zona ?? null,
+      entity.id_politica_cancelacion,
+      entity.titulo,
+      entity.descripcion ?? null,
+      entity.direccion ?? null,
+      entity.capacidad,
+      entity.precio_noche_base,
+      entity.min_noches,
+      entity.max_noches,
+      entity.hora_checkin ?? null,
+      entity.hora_checkout ?? null,
+      entity.moneda,
     ]);
     const created = await this.getById(entity.id_anuncio);
     return created!;
@@ -63,18 +78,26 @@ export class ListingsRepository implements IListingsRepository {
 
   async delete(id: number): Promise<boolean> {
     const usage = await this.db.queryOne<{ cnt: number }>(
-      LISTING_QUERIES.QUERIES.COUNT_USAGE_AMENITIES, [id]
+      LISTING_QUERIES.QUERIES.COUNT_USAGE_AMENITIES,
+      [id],
     );
     if ((usage?.cnt ?? 0) > 0) {
-      throw new BadRequestException('Cannot delete: listing has amenities assigned');
+      throw new BadRequestException(
+        'Cannot delete: listing has amenities assigned',
+      );
     }
-    const res: any = await this.db.query(LISTING_QUERIES.MUTATIONS.DELETE, [id]);
+    const res: any = await this.db.query(LISTING_QUERIES.MUTATIONS.DELETE, [
+      id,
+    ]);
     return res.affectedRows > 0;
   }
 
   // Extras
   async existsById(id: number): Promise<boolean> {
-    const row = await this.db.queryOne<{ ok: 0 | 1 }>(LISTING_QUERIES.QUERIES.EXISTS_ID, [id]);
+    const row = await this.db.queryOne<{ ok: 0 | 1 }>(
+      LISTING_QUERIES.QUERIES.EXISTS_ID,
+      [id],
+    );
     return !!row?.ok;
   }
 
@@ -83,10 +106,30 @@ export class ListingsRepository implements IListingsRepository {
     return this.db.query(LISTING_QUERIES.QUERIES.LIST_BASE, [pageSize, offset]);
   }
 
-  listByCityCapacity(id_ciudad: number, capacidadMin: number, page: number, pageSize: number) {
+  listByCityCapacity(
+    id_ciudad: number,
+    capacidadMin: number,
+    page: number,
+    pageSize: number,
+  ) {
     const offset = (page - 1) * pageSize;
     return this.db.query(LISTING_QUERIES.QUERIES.LIST_BY_CITY_AND_CAPACITY, [
-      id_ciudad, capacidadMin, pageSize, offset,
+      id_ciudad,
+      capacidadMin,
+      pageSize,
+      offset,
     ]);
+  }
+
+  async moreReserved(): Promise<Listing | null> {
+    return this.db.queryOne<Listing>(LISTING_QUERIES.QUERIES.MORE_RESERVERD);
+  }
+
+  async getLastId(): Promise<number> {
+    const last = await this.db.queryOne<{ id_anuncio: number }>(
+      LISTING_QUERIES.QUERIES.LAST_ID,
+    );
+
+    return last?.id_anuncio || 0;
   }
 }
